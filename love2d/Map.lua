@@ -1,7 +1,11 @@
+require 'Util'
+
 Map = Class{}
 
 TILE_BRICK = 1
 TILE_EMPTY = 4
+
+local SCROLL_SPEED = 62
 
 function Map:init()
     self.spritesheet = love.graphics.newImage('graphics/spritesheet.png')
@@ -11,7 +15,13 @@ function Map:init()
     self.mapHeight = 28
     self.tiles = {}
 
+    self.camX = 0
+    self.camY = -3
+
     self.tileSprites = generateQuads(self.spritesheet, self.tileWidth, self.tileHeight)
+
+    self.mapWidthPixels = self.mapWidth * self.tileWidth
+    self.mapHeightPixels = self.mapHeight * self.tileHeight
 
     for y = 1, self.mapHeight / 2 do
         for x = 1, self.mapWidth do
@@ -35,6 +45,15 @@ function Map:getTile(x, y)
 end
 
 function Map:update(dt)
+    if love.keyboard.isDown('w') then
+        self.camY = math.max(0, self.camY + -SCROLL_SPEED * dt)
+    elseif love.keyboard.isDown('a') then
+        self.camX = math.max(0, self.camX + -SCROLL_SPEED * dt)
+    elseif love.keyboard.isDown('s') then
+        self.camY = math.min(self.mapHeightPixels - VIRTUAL_HEIGHT, self.camY + SCROLL_SPEED * dt)
+    elseif love.keyboard.isDown('d') then
+        self.camX = math.min(self.mapWidthPixels - VIRTUAL_WIDTH, self.camX + SCROLL_SPEED * dt)
+    end
 end
 
 function Map:render()
