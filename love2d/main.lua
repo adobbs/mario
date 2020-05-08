@@ -7,8 +7,8 @@ VIRTUAL_HEIGHT = 243
 Class = require 'class'
 push = require 'push'
 
-require 'Map'
 require 'Util'
+require 'Map'
 
 function love.load()
     map = Map()
@@ -25,10 +25,15 @@ end
 function love.update(dt)
 end
 
+function love.keypressed(key)
+    if key == 'escape' then
+        love.event.quit()
+    end
+end
+
 function love.draw()
     push:apply('start')
     love.graphics.clear(108/255, 140/255, 1, 1)
-    love.graphics.print("Hello, world!")
-    -- map:render()
+    map:render()
     push:apply('end')
 end
